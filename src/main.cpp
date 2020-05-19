@@ -2,6 +2,8 @@
 #include <Wire.h>
 #include <EEPROM.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#include <ArduinoOTA.h>
 #include "timer.h"
 #include "lsm.h"
 #include "mot.h"
@@ -14,7 +16,6 @@ WiFiClient client;
 #define textBuffSize 34 //length of longest command string plus two spaces for CR + LF
 char textBuff[textBuffSize]; //someplace to put received text
 int charsReceived = 0;
-//int count=0;
 
 boolean connectFlag = 0; //we'll use a flag separate from client.connected so we can recognize when a new connection has been created
 unsigned long timeOfLastActivity; //time in milliseconds of last activity
@@ -366,10 +367,13 @@ void processUserCommands(String line) {
       client.println("b -- Debug");
       client.println("m -- Monitor");
       client.println("p -- Pause");
+      client.println("q -- Restart controller");
       client.println("");
       client.println("################################################");
       client.println("################################################");
       break;
+    case 'q':
+      ESP.restart();
     case 'p':                                             //Pause command
       if (mode == pausing) {
         mode = tracking;
@@ -473,6 +477,7 @@ void handleTelnet(){
     if (!client || !client.connected()){
       if(client) client.stop();          // client disconnected
       connectFlag = 1;
+      digitalWrite(LED_BUILTIN, LOW);     // Led ON when client is connected
       client = server.available();
       client.println("\nDV2JB ESP8266 admin control");
       client.println("type 'h' for help");
@@ -480,6 +485,7 @@ void handleTelnet(){
     }
     else {
       server.available().stop();  // have client, block new conections
+      digitalWrite(LED_BUILTIN, HIGH);     // Led OFF when client disconnected
     }
   }
   if (client && client.connected() && client.available()){
@@ -496,23 +502,60 @@ void handleTelnet(){
 
 void setup() {
   reset(true);                                            //Initialize the rotor system Reset the rotator and load configuration from EEPROM
-  SerialPort.begin(57600);                                 //Initialize the serial port
+  SerialPort.begin(57600);                                //Initialize the serial port
   lsm.begin();                                            //Initialize the sensor
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);                        //HIGH is OFF
 
   WiFi.mode(WIFI_STA);                                    // To avoid esp8266 from going to AP mode
   WiFi.begin(ssid, password); //Connect to wifi
   SerialPort.println("Connecting to Wifi");               // Wait for connection  
   while (WiFi.status() != WL_CONNECTED) {   
+    digitalWrite(LED_BUILTIN, LOW);
     delay(500);
-    SerialPort.print(".");
+    SerialPort.print("."); 
+    digitalWrite(LED_BUILTIN, HIGH); 
     delay(500);
   }
   SerialPort.println("");
   SerialPort.print("Connected to "); SerialPort.println(ssid);
   SerialPort.print("IP address: "); SerialPort.println(WiFi.localIP());  
+  digitalWrite(LED_BUILTIN, LOW); // LED is on when connected to wifi
   server.begin();
   SerialPort.print("Open Telnet and connect to IP:"); SerialPort.print(WiFi.localIP()); SerialPort.print(" on port ");
   SerialPort.println(port);
+
+  ArduinoOTA.onStart([]() {
+    String type;
+    if (ArduinoOTA.getCommand() == U_FLASH) {
+      type = "sketch";
+    } else { // U_FS
+      type = "filesystem";
+    }
+    // NOTE: if updating FS this would be the place to unmount FS using FS.end()
+    SerialPort.println("Start updating " + type);
+  });
+  ArduinoOTA.onEnd([]() {
+    SerialPort.println("\nEnd");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    SerialPort.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    SerialPort.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) {
+      SerialPort.println("Auth Failed");
+    } else if (error == OTA_BEGIN_ERROR) {
+      SerialPort.println("Begin Failed");
+    } else if (error == OTA_CONNECT_ERROR) {
+      SerialPort.println("Connect Failed");
+    } else if (error == OTA_RECEIVE_ERROR) {
+      SerialPort.println("Receive Failed");
+    } else if (error == OTA_END_ERROR) {
+      SerialPort.println("End Failed");
+    }
+  });
+  ArduinoOTA.begin();
 }
 
 ////////////////////
@@ -523,7 +566,6 @@ void loop() {
   //Repeat continuously - this is for rotator
   t1.execute(&processPosition);                                   //Process position only periodically
   processMotors();                                                //Process motor drive
-  handleTelnet();
+  handleTelnet();                                                 //Handles the processing of commands
+  ArduinoOTA.handle();                                            //Handles ArduinoOTA
 }  
-
-
