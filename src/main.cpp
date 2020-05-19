@@ -26,12 +26,11 @@ unsigned long allowedConnectTime = 300000; //five minutes
 const char *ssid = "CayganFiber20MBPS";  //Enter your wifi SSID
 const char *password = "caygan22";       //Enter your wifi Password
 const int eSize = 1024;                  //this is the eeprom size
-//Please uncomment only one of each of the following MotorTypes, SensorTypes and client types:
 //const int MotorType = PWMDIR;     //Please uncomment this line for the LMD18200T DC motor driver.
 const int MotorType = FWDREV;     //Please uncomment this line for the L298N DC motor driver.
 const int SensorType = LSM303DLHC;  //Please uncomment this line to use the LSM303DLHC sensor.
 #define SerialPort Serial           //Please uncomment this line to use the USB port.
-//#define client Serial1        //Please uncomment this line to use the TTL port.
+//#define SerialPort Serial1        //Please uncomment this line to use the TTL port.
 #define WINDUP_LIMIT 360            //Sets the total number of degrees azimuth rotation in any direction before resetting to zero
 //Motor pins - Don't change
 const int enableA = 0; //D3  not use for FWDREV
@@ -159,8 +158,8 @@ void calibrate() {
 
 void reset(bool getCal) {
   //Reset the rotator, initialize its variables and optionally get the stored calibration
-  azSet = 0.0; // This is initial AZ where your rotator should point to upon power up, default is 0
-  elSet = 0.0; // This is initial EL where your rotator should point to upon power up, default is 0
+  azSet = 100.0; // This is initial AZ where your rotator should point to upon power up, default is 0
+  elSet = 45.0; // This is initial EL where your rotator should point to upon power up, default is 0
   line = "";
   azLast = 0.0;
   elLast = 0.0;
@@ -373,7 +372,7 @@ void processUserCommands(String line) {
       client.println("################################################");
       break;
     case 'q':
-      ESP.restart();
+      ESP.restart();                                      //Reboot the ESP
     case 'p':                                             //Pause command
       if (mode == pausing) {
         mode = tracking;
@@ -394,7 +393,7 @@ void processUserCommands(String line) {
 void processEasycommCommands(String line) {
   //Process Easycomm II rotator commands
   //Easycomm II position command: AZnn.n ELnn.n UP000 XXX DN000 XXX\n
-  //Easycomm II query command: AZ EL \n
+  //Easycomm II query command: AZ EL \                    // When you click engage from Gpredict, hamlib will send this
   String param;                                           //Parameter value
   int firstSpace;                                         //Position of the first space in the command line
   int secondSpace;                                        //Position of the second space in the command line
@@ -411,7 +410,7 @@ void processEasycommCommands(String line) {
       elSet = param.toFloat();                            //Set the elSet value
     }
   }
-  processUserCommands(line);                              //This will process user m,c,x,r,b,d command
+  processUserCommands(line);                              //This will process user m,c,x,r,b,d,q,p command
 }
 
 void printErrorMessage() {
@@ -494,10 +493,7 @@ void handleTelnet(){
   } 
 }
 
-////////////////////
 ////// Setup ///////
-////////////////////
-
 void setup() {
   reset(true);                                            //Initialize the rotor system Reset the rotator and load configuration from EEPROM
   SerialPort.begin(57600);                                //Initialize the serial port
@@ -556,10 +552,7 @@ void setup() {
   ArduinoOTA.begin();
 }
 
-////////////////////
 ////// Loop ////////
-////////////////////
-
 void loop() { 
   //Repeat continuously - this is for rotator
   t1.execute(&processPosition);                                   //Process position only periodically
