@@ -12,8 +12,8 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include "cal.h"
-#include "fil.h"
-#include "vec.h"
+#include "filter.h"
+#include "vector.h"
 
 //Sensor type definitions
 #define LSM303D 0     //For LSM303D sensor

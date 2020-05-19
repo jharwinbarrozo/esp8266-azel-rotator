@@ -4,7 +4,7 @@
 #ifndef MOT_H
 #define MOT_H
 
-#include "fil.h"
+#include "filter.h"
 #include <Arduino.h>
 
 //Motor type definitions

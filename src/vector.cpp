@@ -1,7 +1,7 @@
 //Released under the GNU General Public License.
 //Provides vector functions using cartesian coordinates 
 
-#include "vec.h"
+#include "vector.h"
 
 //Public methods
 

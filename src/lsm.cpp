@@ -24,7 +24,7 @@ void Lsm::begin() {
 
 void Lsm::reset() {
   //Reset the sensor
-  Wire.begin();                                         //Initialize the I2C bus
+  Wire.begin();                                         //Initialize the I2C bus, D2 is SDA, D1 is SCL
   switch (_type) {
     case LSM303D:
       writeReg(LSM303D_ADDRESS, LSM303D_CTRL1, 0b01010111); //Acc output data rate = 50Hz all Acc axes enabled.
@@ -53,28 +53,23 @@ void Lsm::calStart() {
   calGZ.reset();
 }
 
-void Lsm::readGM() {
-  //Read the accelerometer and magnetometer
-  reset();  //Reinitialise I2C and the sensor before each read as it is inclined to lock up after running a long time
+void Lsm::readGM() {                        //Read the accelerometer and magnetometer
+  reset();                                  //Reinitialise I2C and the sensor before each read as it is inclined to lock up after running a long time
   readG();
   readM();
 }
 
-bool Lsm::calibrate() {
-  //Caculate the 3D scaling factors and errors for the magnetometer and accelerometer
-  bool changed = false;
-  //Update exisiting maximums and minimums based on current values
+bool Lsm::calibrate() {                     //Caculate the 3D scaling factors and errors for the magnetometer and accelerometer
+  bool changed = false;                     //Update exisiting maximums and minimums based on current values
   changed = calMX.sample(mx, changed);
   changed = calMY.sample(my, changed);
   changed = calMZ.sample(mz, changed);
   changed = calGX.sample(gx, changed);
   changed = calGY.sample(gy, changed);
   changed = calGZ.sample(gz, changed);
-  if (changed) {
-    //Calculate the error vectors
+  if (changed) {                            //Calculate the error vectors
     cal.me = Vec(calMX.offset, calMY.offset, calMZ.offset);
-    cal.ge = Vec(calGX.offset, calGY.offset, calGZ.offset);
-    //Caclulate the scaling vectors
+    cal.ge = Vec(calGX.offset, calGY.offset, calGZ.offset);       //Caclulate the scaling vectors
     cal.ms = Vec(calMX.scale, calMY.scale, calMZ.scale);
     cal.gs = Vec(calGX.scale, calGY.scale, calGZ.scale);
   }
@@ -89,13 +84,13 @@ void Lsm::getAzEl() {
   Vec M = Vec((mx - cal.me.i) / cal.ms.i, (my - cal.me.j) / cal.ms.j, (mz - cal.me.k) / cal.ms.k).unit();
   Vec G = Vec((gx - cal.ge.i) / cal.gs.i, (gy - cal.ge.j) / cal.gs.j, (gz - cal.ge.k) / cal.gs.k).unit();
   //Define the antenna axes as the main reference axes
-  Vec X = Vec(1.0, 0.0, 0.0);         //The antenna X vector
-  Vec Y = Vec(0.0, 1.0, 0.0);         //The antenna Y (boresight) vector
-  Vec Z = Vec(0.0, 0.0, 1.0);         //The antenna Z vector
+  Vec X = Vec(1.0, 0.0, 0.0);              //The antenna X vector
+  Vec Y = Vec(0.0, 1.0, 0.0);              //The antenna Y (boresight) vector
+  Vec Z = Vec(0.0, 0.0, 1.0);              //The antenna Z vector
   //Compute the magnetic ground axes relative to the antenna axes
-  Vec E = G.cross(M);                   //The magnetic East vector
-  Vec N = E.cross(G);                   //The magnetic North vector
-  Vec U = G.neg();                        //The magnetic Up vector
+  Vec E = G.cross(M);                      //The magnetic East vector
+  Vec N = E.cross(G);                      //The magnetic North vector
+  Vec U = G.neg();                         //The magnetic Up vector
   //Compute the projections of the antenna axes onto the magnetic ground axes
   float Xn = X.dot(N);                     //The scalar projection of X onto N
   float Xe = X.dot(E);                     //The scalar projection of X onto E
@@ -104,7 +99,7 @@ void Lsm::getAzEl() {
   //Compute the true antenna pointing angles relative to the magnetic ground axes
   az = atan2(-Xn, Xe) * rad2deg + cal.md;  //The azimuth angle in degrees using the X-axis
   el = atan2(Yu, Zu) * rad2deg;            //The elevation angle in degrees using the Y-axis
-  if (az > 180) az = az - 360;           //Ensure azimuth is in -180..180 format after adding D
+  if (az > 180) az = az - 360;             //Ensure azimuth is in -180..180 format after adding D
 }
 
 //Private methods

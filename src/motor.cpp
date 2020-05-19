@@ -1,7 +1,7 @@
 //Released under the GNU General Public License.
 //Provides DC motor speed and direction control
 
-#include "mot.h"
+#include "motor.h"
 // int enA = 0;
 
 //Public methods

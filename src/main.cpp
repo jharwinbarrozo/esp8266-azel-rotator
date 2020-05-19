@@ -6,7 +6,7 @@
 #include <ArduinoOTA.h>
 #include "timer.h"
 #include "lsm.h"
-#include "mot.h"
+#include "motor.h"
 
 int port = 23;  //Port number
 WiFiServer server(port);

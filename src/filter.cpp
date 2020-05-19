@@ -1,7 +1,7 @@
 //Released under the GNU General Public License.
 //Provides low pass filters for the sensors and motors 
 
-#include "fil.h"
+#include "filter.h"
 
 //Public methods
 
