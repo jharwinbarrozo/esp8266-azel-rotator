@@ -19,7 +19,7 @@ int charsReceived = 0;
 
 boolean connectFlag = 0; //we'll use a flag separate from client.connected so we can recognize when a new connection has been created
 unsigned long timeOfLastActivity; //time in milliseconds of last activity
-unsigned long allowedConnectTime = 300000; //five minutes
+unsigned long allowedConnectTime = 600000; //ten minutes timeout after no activity from client
  
 //Constants
 //User configuration section:
@@ -493,6 +493,11 @@ void handleTelnet(){
   } 
 }
 
+void checkConnectFlag() {
+  // check to see if connection has timed out
+  if(connectFlag) checkConnectionTimeout();
+}
+
 ////// Setup ///////
 void setup() {
   reset(true);                                            //Initialize the rotor system Reset the rotator and load configuration from EEPROM
@@ -519,7 +524,7 @@ void setup() {
   SerialPort.print("Open Telnet and connect to IP:"); SerialPort.print(WiFi.localIP()); SerialPort.print(" on port ");
   SerialPort.println(port);
 
-  ArduinoOTA.onStart([]() {
+  ArduinoOTA.onStart([]() {                               //ArduinoOTA code starts
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH) {
       type = "sketch";
@@ -558,5 +563,6 @@ void loop() {
   t1.execute(&processPosition);                                   //Process position only periodically
   processMotors();                                                //Process motor drive
   handleTelnet();                                                 //Handles the processing of commands
+  checkConnectFlag();                                             //Check connectflag
   ArduinoOTA.handle();                                            //Handles ArduinoOTA
 }  
