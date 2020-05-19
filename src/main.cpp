@@ -477,7 +477,6 @@ void handleTelnet(){
     if (!client || !client.connected()){
       if(client) client.stop();          // client disconnected
       connectFlag = 1;
-      digitalWrite(LED_BUILTIN, LOW);     // Led ON when client is connected
       client = server.available();
       client.println("\nDV2JB ESP8266 admin control");
       client.println("type 'h' for help");
@@ -485,7 +484,6 @@ void handleTelnet(){
     }
     else {
       server.available().stop();  // have client, block new conections
-      digitalWrite(LED_BUILTIN, HIGH);     // Led OFF when client disconnected
     }
   }
   if (client && client.connected() && client.available()){
