@@ -14,7 +14,7 @@ WiFiClient client;
 #define textBuffSize 34 //length of longest command string plus two spaces for CR + LF
 char textBuff[textBuffSize]; //someplace to put received text
 int charsReceived = 0;
-int count=0;
+//int count=0;
 
 boolean connectFlag = 0; //we'll use a flag separate from client.connected so we can recognize when a new connection has been created
 unsigned long timeOfLastActivity; //time in milliseconds of last activity
