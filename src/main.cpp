@@ -6,7 +6,7 @@
 #include "lsm.h"
 #include "mot.h"
 
-int port = 8888;  //Port number
+int port = 23;  //Port number
 WiFiServer server(port);
 WiFiClient client;
 
@@ -24,11 +24,10 @@ unsigned long allowedConnectTime = 300000; //five minutes
 //User configuration section:
 const char *ssid = "CayganFiber20MBPS";  //Enter your wifi SSID
 const char *password = "caygan22";       //Enter your wifi Password
-const int eSize = 1024;                  //this is the eeprom
+const int eSize = 1024;                  //this is the eeprom size
 //Please uncomment only one of each of the following MotorTypes, SensorTypes and client types:
 //const int MotorType = PWMDIR;     //Please uncomment this line for the LMD18200T DC motor driver.
 const int MotorType = FWDREV;     //Please uncomment this line for the L298N DC motor driver.
-//const int MotorType = ACMOTR;       //Please uncomment this line for the triac AC motor driver.
 const int SensorType = LSM303DLHC;  //Please uncomment this line to use the LSM303DLHC sensor.
 #define SerialPort Serial           //Please uncomment this line to use the USB port.
 //#define client Serial1        //Please uncomment this line to use the TTL port.
@@ -109,7 +108,6 @@ void clear() {
   yield();
   EEPROM.commit();
   }
-  
 }
 
 //Functions
@@ -410,14 +408,13 @@ void processEasycommCommands(String line) {
     }
   }
   processUserCommands(line);                              //This will process user m,c,x,r,b,d command
-
 }
 
 void printErrorMessage() {
   client.println("Unrecognized command.  ? for help.");
 }
 
-void printPrompt() {
+void resetCharsReceived() {
   timeOfLastActivity = millis();
   delay(20);
   client.flush();
@@ -455,18 +452,17 @@ void getReceivedText() {
     processEasycommCommands(line);
     
     // after completing command, print a new prompt
-    printPrompt();
+    resetCharsReceived();
   }
 
   // if textBuff full without reaching a CR, print an error message
   if(charsReceived >= textBuffSize) {
     client.println();
     printErrorMessage();
-    printPrompt();
+    resetCharsReceived();
   }
   // if textBuff not full and no CR, do nothing else;
   // go back to loop until more characters are received
-
 }
 
 void handleTelnet(){
@@ -480,7 +476,7 @@ void handleTelnet(){
       client = server.available();
       client.println("\nDV2JB ESP8266 admin control");
       client.println("type 'h' for help");
-      printPrompt();
+      resetCharsReceived();
     }
     else {
       server.available().stop();  // have client, block new conections

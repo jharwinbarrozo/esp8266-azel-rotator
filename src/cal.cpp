@@ -1,6 +1,3 @@
-//cal.cpp - Calibration library.
-//Copyright (c) 2015-2018 Julie VK3FOWL and Joe VK3YSP
-//For more information please visit http://www.sarcnet.org
 //Released under the GNU General Public License.
 //Provides calibration objects for each axis
 //The offset and scaling factors are accumulated by sampling data

@@ -1,10 +1,3 @@
-//lsm.cpp - Library for LSM303 Accelerometer/Magnetometer.
-//Copyright (c) 2015-2018 Julie VK3FOWL and Joe VK3YSP
-//Released under the GNU General Public License.
-//For more information please visit http://www.sarcnet.org
-//Submitted for publication in Amateur Radio magazine: December 2015
-//First published in Amateur Radio magazine: May 2016
-//Upgraded Mk2 version published in Amateur Radio magazine: October 2016
 //Reference: ST Datasheet: LSM303 Ultra-compact high-performance eCompass module: 3D accelerometer and 3D magnetometer
 //There are two types of supported sensor boards containing the LSM303D or LSL303DHLC integrated circuits.
 //Because the flat side of the sensor board is attached on the top of the antenna boom, with the long side of the sensor board parallel to the boom,
@@ -16,7 +9,6 @@
 #include "lsm.h"
 
 //Public methods
-
 Lsm::Lsm(int type, float alpha): filMX(alpha), filMY(alpha), filMZ(alpha), filGX(alpha), filGY(alpha), filGZ(alpha) {
   //Constructor
   //Note: Wire.h cannot be initialized from a class constructor - see begin() method
@@ -116,7 +108,6 @@ void Lsm::getAzEl() {
 }
 
 //Private methods
-
 void Lsm::readG() {
   switch (_type) {
     case LSM303D:
