@@ -12,7 +12,6 @@ int port = 23;  //Port number
 WiFiServer server(port);
 WiFiClient client;
 
-
 #define textBuffSize 34 //length of longest command string plus two spaces for CR + LF
 char textBuff[textBuffSize]; //someplace to put received text
 int charsReceived = 0;
@@ -22,29 +21,25 @@ unsigned long timeOfLastActivity; //time in milliseconds of last activity
 unsigned long allowedConnectTime = 600000; //ten minutes timeout after no activity from client
  
 //Constants
-//User configuration section:
 const char *ssid = "CayganFiber20MBPS";  //Enter your wifi SSID
 const char *password = "caygan22";       //Enter your wifi Password
 const int eSize = 1024;                  //this is the eeprom size
-//const int MotorType = PWMDIR;     //Please uncomment this line for the LMD18200T DC motor driver.
 const int MotorType = FWDREV;     //Please uncomment this line for the L298N DC motor driver.
 const int SensorType = LSM303DLHC;  //Please uncomment this line to use the LSM303DLHC sensor.
 #define SerialPort Serial           //Please uncomment this line to use the USB port.
-//#define SerialPort Serial1        //Please uncomment this line to use the TTL port.
 #define WINDUP_LIMIT 360            //Sets the total number of degrees azimuth rotation in any direction before resetting to zero
-//Motor pins - Don't change
 const int enableA = 0; //D3  not use for FWDREV
 const int enableB = 2; //D4 not use for FWDREV
 const int elFwdPin = 14;   //D5
 const int elRevPin = 12;   //D6
 const int azFwdPin = 13;   //D7
 const int azRevPin = 15;   //D8
-//Speaker pins
-//const int gndPin = D4;    //Makes a convenient ground pin adjacent to the speaker pin
+//const int gndPin = D4;   //Makes a convenient ground pin adjacent to the speaker pin
 //const int spkPin = 9;    //Attach a piezo buzzer to this pin. It beeps when new calibration data arrives.
 //Motor drive gains. These set the amount of motor drive close to the set point
 const int azGain = 25;   //Azimuth motor gain
 const int elGain = 25;   //Elevation motor gain
+
 //Filter constants
 const float azAlpha = 0.5; //Alpha value for AZ motor filter: Decrease to slow response time and reduce motor dither.
 const float elAlpha = 0.7; // default 0.5 Alpha value for EL motor filter: Decrease to slow response time and reduce motor dither.
@@ -72,10 +67,7 @@ float azInc;            //AZ increment for demo mode
 float elInc;            //EL increment for demo mode
 Modes mode;             //Rotator mode
 
-///////////////////////////////////////////////////////////////////////////
-
 //Objects
-
 //Motor driver object: Mot xxMot(Driver-Type, Filter-Alpha, Gain, Fwd-Pin, Rev/Dir-Pin)
 Mot azMot(MotorType, azAlpha, azGain, azFwdPin, azRevPin); //AZ motor driver object
 Mot elMot(MotorType, elAlpha, elGain, elFwdPin, elRevPin); //EL motor driver object
