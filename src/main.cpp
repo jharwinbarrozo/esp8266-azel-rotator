@@ -282,7 +282,7 @@ void processPosition() {
       clear();
       break;
     default:
-      lsm.getAzEl();  //Get the azimuth and elevation of the antenna                                                              //Get the antenna AZ and EL
+      lsm.getAzEl();  //Get the azimuth and elevation of the antenna               //Get the antenna AZ and EL
       az = lsm.az;
       el = lsm.el;
       getWindup(&windup, &azWindup, &azOffset, &azLast, &elLast, az, elSet);      //Get the AZ windup angle and windup state
@@ -306,7 +306,7 @@ void processUserCommands(String line) {
   int firstSpace;                                         //Position of the first space in the command line
   char command = line.charAt(0);                          //Get the first character
   switch (command) {                                      //Process type 1 user commands
-    case 'x':                                             //Reset command
+    case 'x':                                             //Clear EEPROM content command
       client.println("Clearing EEPROM in progress");
       clear();
       reset(true);
@@ -409,7 +409,7 @@ void processEasycommCommands(String line) {
       elSet = param.toFloat();                            //Set the elSet value
     }
   }
-  processUserCommands(line);
+  processUserCommands(line);                              //This will process user m,c,x,r,b,d command
 
 }
 
@@ -437,7 +437,6 @@ void checkConnectionTimeout() {
 void getReceivedText() {
   char c;
   int charsWaiting;
-
   // copy waiting characters into textBuff
   //until textBuff full, CR received, or no more characters
   charsWaiting = client.available();
