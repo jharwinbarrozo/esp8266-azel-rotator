@@ -150,8 +150,8 @@ void calibrate() {
 
 void reset(bool getCal) {
   //Reset the rotator, initialize its variables and optionally get the stored calibration
-  azSet = 100.0; // This is initial AZ where your rotator should point to upon power up, default is 0
-  elSet = 45.0; // This is initial EL where your rotator should point to upon power up, default is 0
+  azSet = 0.0; // This is initial AZ where your rotator should point to upon power up, default is 0
+  elSet = 0.0; // This is initial EL where your rotator should point to upon power up, default is 0
   line = "";
   azLast = 0.0;
   elLast = 0.0;
@@ -402,7 +402,6 @@ void processEasycommCommands(String line) {
       elSet = param.toFloat();                            //Set the elSet value
     }
   }
-  processUserCommands(line);                              //This will process user m,c,x,r,b,d,q,p command
 }
 
 void printErrorMessage() {
@@ -445,8 +444,15 @@ void getReceivedText() {
   if(c == '\n') {
     line = textBuff;
     processEasycommCommands(line);
-    
-    // after completing command, print a new prompt
+    // after completing command, flush client and reset character received
+    resetCharsReceived();
+  }
+  //if CR carriage return found go look at received text and execute command
+  // in telnet client, typing A then followed by combination of control+m+m will send CRLF
+  if(c == 0x0d) {   // this is the hex of carriage return
+    line = textBuff;
+    processUserCommands(line);
+    // after completing command, flush client and reset character received
     resetCharsReceived();
   }
 
