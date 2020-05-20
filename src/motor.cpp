@@ -58,31 +58,31 @@ void Mot::_fwdrev(float err) {
   }
 }
 
-// void Mot::_fwdrev(float err) {
-//   analogWriteRange(255);
-//   //Drive the motors to reduce the antenna pointing errors to zero
-//   //Calculate the motor speed: A linear ramp close to zero; constant full speed beyond that.
-//   float spd = constrain(err * _gain, -255, 255);
-//   //Low pass filter the speed to reduce abrubt changes in speed
-//   spd = fil.lpf(spd);
-//   //For L298N DC Motor H-Bridge Driver Boards
-//   //Set the motor speed
-//   if (abs(err) < 0.5) {
-//     digitalWrite(_pin1, LOW);
-//     digitalWrite(_pin2, LOW);
-//   } else {
-//     if (spd > 0) {
-//       digitalWrite(_pin1, HIGH);
-//       digitalWrite(_pin2, LOW);
-//       analogWrite(enA, abs(spd));   //abs is very important here so it would neglect negative values
+/* void Mot::_fwdrev(float err) {
+  analogWriteRange(255);
+  //Drive the motors to reduce the antenna pointing errors to zero
+  //Calculate the motor speed: A linear ramp close to zero; constant full speed beyond that.
+  float spd = constrain(err * _gain, -255, 255);
+  //Low pass filter the speed to reduce abrubt changes in speed
+  spd = fil.lpf(spd);
+  //For L298N DC Motor H-Bridge Driver Boards
+  //Set the motor speed
+  if (abs(err) < 0.5) {
+    digitalWrite(_pin1, LOW);
+    digitalWrite(_pin2, LOW);
+  } else {
+    if (spd > 0) {
+      digitalWrite(_pin1, HIGH);
+      digitalWrite(_pin2, LOW);
+      analogWrite(enA, abs(spd));   //abs is very important here so it would neglect negative values
       
-//     } else {
-//       digitalWrite(_pin1, LOW);
-//       digitalWrite(_pin2, HIGH);
-//       analogWrite(enA, abs(spd));   //abs is very important here so it would neglect negative values
-//     }
-//   }
-// }
+    } else {
+      digitalWrite(_pin1, LOW);
+      digitalWrite(_pin2, HIGH);
+      analogWrite(enA, abs(spd));   //abs is very important here so it would neglect negative values
+    }
+  }
+} */
 
 void Mot::_pwmdir(float err) {
   //Drive the motors to reduce the antenna pointing errors to zero
