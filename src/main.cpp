@@ -21,8 +21,8 @@ unsigned long timeOfLastActivity; //time in milliseconds of last activity
 unsigned long allowedConnectTime = 600000; //ten minutes timeout after no activity from client
  
 //Constants
-const char *ssid = "CayganFiber20MBPS";  //Enter your wifi SSID
-const char *password = "caygan22";       //Enter your wifi Password
+const char *ssid = "CayganRepeater20MBPS";  //Enter your wifi SSID
+const char *password = "jhareth22";       //Enter your wifi Password
 const int eSize = 1024;                  //this is the eeprom size
 const int MotorType = FWDREV;     //Please uncomment this line for the L298N DC motor driver.
 const int SensorType = LSM303DLHC;  //Please uncomment this line to use the LSM303DLHC sensor.
@@ -150,8 +150,8 @@ void calibrate() {
 
 void reset(bool getCal) {
   //Reset the rotator, initialize its variables and optionally get the stored calibration
-  azSet = 0.0; // This is initial AZ where your rotator should point to upon power up, default is 0
-  elSet = 0.0; // This is initial EL where your rotator should point to upon power up, default is 0
+  azSet = 100.0; // This is initial AZ where your rotator should point to upon power up, default is 0
+  elSet = 60.0; // This is initial EL where your rotator should point to upon power up, default is 0
   line = "";
   azLast = 0.0;
   elLast = 0.0;
