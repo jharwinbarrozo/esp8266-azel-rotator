@@ -499,7 +499,7 @@ void handleTelnet(){
 ////// Setup ///////
 void setup() {
   reset(true);                                            //Initialize the rotor system Reset the rotator and load configuration from EEPROM
-  SerialPort.begin(57600);                                //Initialize the serial port
+  SerialPort.begin(19200);                                //Initialize the serial port
   lsm.begin();                                            //Initialize the sensor
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);                        //HIGH is OFF
