@@ -16,9 +16,9 @@ WiFiClient client;
 char textBuff[textBuffSize]; //someplace to put received text
 int charsReceived = 0;
 
-boolean connectFlag = 0; //we'll use a flag separate from client.connected so we can recognize when a new connection has been created
+/* boolean connectFlag = 0; //we'll use a flag separate from client.connected so we can recognize when a new connection has been created
 unsigned long timeOfLastActivity; //time in milliseconds of last activity
-unsigned long allowedConnectTime = 600000; //ten minutes timeout after no activity from client
+unsigned long allowedConnectTime = 600000; //ten minutes timeout after no activity from client */
  
 //Constants
 const char *ssid = "CayganRepeater20MBPS";  //Enter your wifi SSID
@@ -409,21 +409,21 @@ void printErrorMessage() {
 }
 
 void resetCharsReceived() {
-  timeOfLastActivity = millis();
+  //timeOfLastActivity = millis();
   delay(20);
   client.flush();
   charsReceived = 0; //count of characters received
   //client.print(">");
 }
 
-void checkConnectionTimeout() {
+/* void checkConnectionTimeout() {
   if(millis() - timeOfLastActivity > allowedConnectTime) {
     client.println();
     client.println("Timeout disconnect.");
     client.stop();
     connectFlag = 0;
   }
-}
+} */
 
 void getReceivedText() {
   char c;
@@ -473,7 +473,7 @@ void handleTelnet(){
   	// client is connected
     if (!client || !client.connected()){
       if(client) client.stop();          // client disconnected
-      connectFlag = 1;
+      //connectFlag = 1;
       client = server.available();
       client.println("\nDV2JB ESP8266 admin control");
       client.println("type 'h' for help");
@@ -491,10 +491,10 @@ void handleTelnet(){
   } 
 }
 
-void checkConnectFlag() {
+/* void checkConnectFlag() {
   // check to see if connection has timed out
   if(connectFlag) checkConnectionTimeout();
-}
+} */
 
 ////// Setup ///////
 void setup() {
@@ -561,6 +561,6 @@ void loop() {
   t1.execute(&processPosition);                                   //Process position only periodically
   processMotors();                                                //Process motor drive
   handleTelnet();                                                 //Handles the processing of commands
-  checkConnectFlag();                                             //Check connectflag
+  //checkConnectFlag();                                             //Check connectflag
   ArduinoOTA.handle();                                            //Handles ArduinoOTA
 }  
