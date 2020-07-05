@@ -1,19 +1,7 @@
 {
-	"folders": [
-		{
-			"path": "../../../PlatformIO/Projects/Transistor Switch"
-		},
-		{
-			"name": "Print Mon",
-			"path": "../../../PlatformIO/Projects/Print Mon"
-		},
-		{
-			"path": ".."
-		}
-	],
-	"settings": {
-		"files.associations": {
-			"random": "cpp"
-		}
-	}
+    "folders": [
+        {
+            "path": ".."
+        }
+    ]
 }
