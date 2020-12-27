@@ -27,7 +27,7 @@ const int eSize = 1024;                  //this is the eeprom size
 const int MotorType = FWDREV;     //Please uncomment this line for the L298N DC motor driver.
 const int SensorType = LSM303DLHC;  //Please uncomment this line to use the LSM303DLHC sensor.
 #define SerialPort Serial           //Please uncomment this line to use the USB port.
-#define WINDUP_LIMIT 360            //Sets the total number of degrees azimuth rotation in any direction before resetting to zero
+#define WINDUP_LIMIT 450            //Sets the total number of degrees azimuth rotation in any direction before resetting to zero
 const int enableA = 0; //D3  not use for FWDREV
 const int enableB = 2; //D4 not use for FWDREV
 const int elFwdPin = 14;   //D5
