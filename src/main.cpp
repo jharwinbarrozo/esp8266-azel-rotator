@@ -345,7 +345,6 @@ void processUserCommands(String line) {
       break;
     case 'h':                                             //Help command
       client.println("################################################");
-      client.println("################################################");
       client.println("");
       client.println("Commands:");
       client.println("az el -- Manual position control (0..360 0..90)");
@@ -360,7 +359,6 @@ void processUserCommands(String line) {
       client.println("p -- Pause");
       client.println("q -- Restart controller");
       client.println("");
-      client.println("################################################");
       client.println("################################################");
       break;
     case 'q':
