@@ -349,7 +349,7 @@ void processUserCommands(String line) {
       client.println("");
       client.println("Commands:");
       client.println("az el -- Manual position control (0..360 0..90)");
-      client.println("r  -- Reset");
+      client.println("r  -- Reset, warning this will reset the eeprom");
       client.println("eNN.N -- Magnetic Declination");
       client.println("c -- Calibrate");
       client.println("s -- Save");
