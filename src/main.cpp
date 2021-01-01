@@ -22,7 +22,7 @@ unsigned long allowedConnectTime = 600000; //ten minutes timeout after no activi
  
 //Constants
 const char *ssid = "CayganRepeater20MBPS";  //Enter your wifi SSID
-const char *password = "jhareth22";       //Enter your wifi Password
+const char *password = "########";       //Enter your wifi Password
 const int eSize = 1024;                  //this is the eeprom size
 const int MotorType = FWDREV;     //Please uncomment this line for the L298N DC motor driver.
 const int SensorType = LSM303DLHC;  //Please uncomment this line to use the LSM303DLHC sensor.
