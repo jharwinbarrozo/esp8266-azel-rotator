@@ -359,7 +359,6 @@ void processUserCommands(String line) {
       client.println("p -- Pause");
       client.println("q -- Restart controller");
       client.println("");
-      client.println("################################################");
       break;
     case 'q':
       ESP.restart();                                      //Reboot the ESP
